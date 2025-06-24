@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Christian SANOGO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Écran de démarrage -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="user-avatar">
+                <div class="avatar-circle">
+                    <span class="avatar-text">CS</span>
+                </div>
+                <div class="status-indicator online"></div>
+            </div>
+            <h2 class="user-name">Mohamed SANOGO</h2>
+            <p class="login-subtitle">Étudiant en Communication</p>
+            <div class="login-options">
+                <button id="loginBtn" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Se connecter</span>
+                </button>
+                <button id="guestBtn" class="guest-btn">
+                    <i class="fas fa-user"></i>
+                    <span>Mode invité</span>
+                </button>
+            </div>
+        </div>
+        <div class="login-footer">
+            <div class="power-options">
+                <button class="power-btn" title="Éteindre">
+                    <i class="fas fa-power-off"></i>
+                </button>
+                <button class="restart-btn" title="Redémarrer">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+        </div>
+        <div class="loading-bar hidden">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- Interface Bureau -->
+    <div id="desktop" class="desktop hidden">
+        <!-- Fond d'écran -->
+        <div class="wallpaper"></div>
+        
+        <!-- Widget météo -->
+        <div class="weather-widget">
+            <div class="weather-icon">☀️</div>
+            <div class="weather-temp">28°C</div>
+            <div class="weather-location">Abidjan</div>
+        </div>
+
+        <!-- Widget horloge -->
+        <div class="clock-widget">
+            <div class="digital-clock">
+                <div class="clock-time" id="clockTime">12:00</div>
+                <div class="clock-date" id="clockDate">Lundi 23 Juin</div>
+            </div>
+        </div>
+
+        <!-- Menu contextuel -->
+        <div id="contextMenu" class="context-menu hidden">
+            <div class="context-item" data-action="refresh">
+                <i class="fas fa-sync-alt"></i>
+                <span>Actualiser</span>
+            </div>
+            <div class="context-item" data-action="wallpaper">
+                <i class="fas fa-image"></i>
+                <span>Changer le fond d'écran</span>
+            </div>
+            <div class="context-item" data-action="settings">
+                <i class="fas fa-cog"></i>
+                <span>Paramètres</span>
+            </div>
+            <div class="context-item" data-action="new-folder">
+                <i class="fas fa-folder-plus"></i>
+                <span>Nouveau dossier</span>
+            </div>
+        </div>
+
+        <!-- Icônes du bureau -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" data-window="about">
+                <div class="icon-image">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <span class="icon-label">À propos</span>
+            </div>
+
+            <div class="desktop-icon" data-window="skills">
+                <div class="icon-image">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <span class="icon-label">Compétences</span>
+            </div>
+
+            <div class="desktop-icon" data-window="experience">
+                <div class="icon-image">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <span class="icon-label">Expérience</span>
+            </div>
+
+            <div class="desktop-icon" data-window="portfolio">
+                <div class="icon-image">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <span class="icon-label">Portfolio</span>
+            </div>
+
+            <div class="desktop-icon" data-window="contact">
+                <div class="icon-image">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <span class="icon-label">Contact</span>
+            </div>
+
+            <div class="desktop-icon" data-window="calculator">
+                <div class="icon-image">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <span class="icon-label">Calculatrice</span>
+            </div>
+
+            <div class="desktop-icon" data-window="notepad">
+                <div class="icon-image">
+                    <i class="fas fa-sticky-note"></i>
+                </div>
+                <span class="icon-label">Bloc-notes</span>
+            </div>
+
+            <div class="desktop-icon" data-window="music">
+                <div class="icon-image">
+                    <i class="fas fa-music"></i>
+                </div>
+                <span class="icon-label">Musique</span>
+            </div>
+
+            <div class="desktop-icon" data-window="gallery">
+                <div class="icon-image">
+                    <i class="fas fa-images"></i>
+                </div>
+                <span class="icon-label">Galerie</span>
+            </div>
+
+            <div class="desktop-icon" data-action="download-cv">
+                <div class="icon-image">
+                    <i class="fas fa-download"></i>
+                </div>
+                <span class="icon-label">Télécharger CV</span>
+            </div>
+        </div>
+
+        <!-- Fenêtres -->
+        <div id="aboutWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-user-circle"></i>
+                    À propos
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="about">−</button>
+                    <button class="window-maximize" data-window="about">□</button>
+                    <button class="window-close" data-window="about">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="profile-section">
+                    <div class="profile-avatar">
+                        <span>CS</span>
+                    </div>
+                    <div class="profile-info">
+                        <h3>Mohamed SANOGO</h3>
+                        <p class="profile-title">Étudiant en Communication</p>
+                        <div class="social-links">
+                            <a href="https://www.linkedin.com/in/mohamed-sanogo-680261225?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://www.facebook.com/mohamed.sanogoch/" class="social-link" target="_blank">
+                                <i class="fab fa-facebook-f"></i>
+                              </a>
+                            <a href="https://www.instagram.com/all4kng?igsh=MWVkNXhkcXRnYjhqaQ%3D%3D&utm_source=qr" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-text">
+                    <p>Je suis un étudiant en communication à l'ISCOM/UCAO-UUA, passionné par la communication et les réseaux sociaux, avec une forte sensibilité créative et technique.</p>
+                    <p>Mon parcours me permet de combiner créativité et compétences techniques pour créer des solutions de communication innovantes et impactantes.</p>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">3+</div>
+                            <div class="stat-label">Années d'expérience</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">15+</div>
+                            <div class="stat-label">Projets réalisés</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">Satisfaction client</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">5★</div>
+                            <div class="stat-label">Note moyenne</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="skillsWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-tools"></i>
+                    Compétences
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="skills">−</button>
+                    <button class="window-maximize" data-window="skills">□</button>
+                    <button class="window-close" data-window="skills">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="skills-tabs">
+                    <button class="tab-btn active" data-tab="technical">Technique</button>
+                    <button class="tab-btn" data-tab="creative">Créatif</button>
+                    <button class="tab-btn" data-tab="soft">Soft Skills</button>
+                    <button class="tab-btn" data-tab="languages">Langues</button>
+                </div>
+                
+                <div class="tab-content active" id="technical">
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h4><i class="fas fa-code"></i> Développement web</h4>
+                            <div class="skill-item">
+                                <span class="skill-name">HTML/CSS/JS</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 85%"></div>
+                                </div>
+                                <span class="skill-percentage">85%</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">VSCode</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 80%"></div>
+                                </div>
+                                <span class="skill-percentage">80%</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">Git/GitHub</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 75%"></div>
+                                </div>
+                                <span class="skill-percentage">75%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-category">
+                            <h4><i class="fas fa-robot"></i> Intelligence Artificielle</h4>
+                            <div class="skill-item">
+                                <span class="skill-name">ChatGPT</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 90%"></div>
+                                </div>
+                                <span class="skill-percentage">90%</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">DeepSeek</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 80%"></div>
+                                </div>
+                                <span class="skill-percentage">80%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="creative">
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h4><i class="fas fa-palette"></i> Design graphique</h4>
+                            <div class="skill-item">
+                                <span class="skill-name">Canva</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 90%"></div>
+                                </div>
+                                <span class="skill-percentage">90%</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">Photoshop</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 70%"></div>
+                                </div>
+                                <span class="skill-percentage">70%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-category">
+                            <h4><i class="fas fa-video"></i> Montage vidéo</h4>
+                            <div class="skill-item">
+                                <span class="skill-name">CapCut</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 85%"></div>
+                                </div>
+                                <span class="skill-percentage">85%</span>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-name">Premiere Pro</span>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 75%"></div>
+                                </div>
+                                <span class="skill-percentage">75%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="soft">
+                    <div class="soft-skills">
+                        <div class="soft-skill-item">
+                            <i class="fas fa-comments"></i>
+                            <h4>Communication</h4>
+                            <p>Excellente capacité à communiquer avec les clients et équipes</p>
+                        </div>
+                        <div class="soft-skill-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <h4>Créativité</h4>
+                            <p>Approche innovante pour résoudre les défis créatifs</p>
+                        </div>
+                        <div class="soft-skill-item">
+                            <i class="fas fa-users"></i>
+                            <h4>Travail d'équipe</h4>
+                            <p>Collaboration efficace dans des environnements multidisciplinaires</p>
+                        </div>
+                        <div class="soft-skill-item">
+                            <i class="fas fa-clock"></i>
+                            <h4>Gestion du temps</h4>
+                            <p>Organisation et respect des délais dans tous les projets</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="languages">
+                    <div class="languages-grid">
+                        <div class="language-item">
+                            <div class="language-flag">🇫🇷</div>
+                            <div class="language-info">
+                                <h4>Français</h4>
+                                <div class="language-level">
+                                    <span class="level-dot active"></span>
+                                    <span class="level-dot active"></span>
+                                    <span class="level-dot active"></span>
+                                    <span class="level-dot active"></span>
+                                    <span class="level-dot active"></span>
+                                </div>
+                                <p>Langue maternelle</p>
+                            </div>
+                        </div>
+                        <div class="language-item">
+                            <div class="language-flag">🇬🇧</div>
+                            <div class="language-info">
+                                <h4>Anglais</h4>
+                                <div class="language-level">
+                                    <span class="level-dot active"></span>
+                                    <span class="level-dot active"></span>
+                                    <span class="level-dot active"></span>
+                                    <span class="level-dot active"></span>
+                                    <span class="level-dot"></span>
+                                </div>
+                                <p>Niveau avancé</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="experienceWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-briefcase"></i>
+                    Expérience
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="experience">−</button>
+                    <button class="window-maximize" data-window="experience">□</button>
+                    <button class="window-close" data-window="experience">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="experience-timeline">
+                    <div class="experience-item">
+                        <div class="experience-date">2024 – Présent</div>
+                        <div class="experience-details">
+                            <h4>Webdesigner</h4>
+                            <p class="company">SANCOFA AGENCY</p>
+                            <p class="description">Création et développement de sites web, design d'interfaces utilisateur et optimisation de l'expérience utilisateur.</p>
+                            <div class="experience-tags">
+                                <span class="tag">Web Design</span>
+                                <span class="tag">UI/UX</span>
+                                <span class="tag">Frontend</span>
+                                <span class="tag">Responsive</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="experience-date">2022</div>
+                        <div class="experience-details">
+                            <h4>Assistant communication</h4>
+                            <p class="company">Shalommood Music</p>
+                            <p class="description">Gestion des réseaux sociaux, création de contenu visuel et support dans les stratégies de communication.</p>
+                            <div class="experience-tags">
+                                <span class="tag">Social Media</span>
+                                <span class="tag">Content Creation</span>
+                                <span class="tag">Communication</span>
+                                <span class="tag">Marketing</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="experience-date">2019 – 2021</div>
+                        <div class="experience-details">
+                            <h4>Assistant personnel</h4>
+                            <p class="company">Watoo production</p>
+                            <p class="description">Support administratif, coordination de projets et assistance dans la gestion quotidienne des activités.</p>
+                            <div class="experience-tags">
+                                <span class="tag">Administration</span>
+                                <span class="tag">Gestion de projet</span>
+                                <span class="tag">Organisation</span>
+                                <span class="tag">Coordination</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="portfolioWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-folder-open"></i>
+                    Portfolio
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="portfolio">−</button>
+                    <button class="window-maximize" data-window="portfolio">□</button>
+                    <button class="window-close" data-window="portfolio">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="portfolio-filter">
+                    <button class="filter-btn active" data-filter="all">Tous</button>
+                    <button class="filter-btn" data-filter="web">Web</button>
+                    <button class="filter-btn" data-filter="design">Design</button>
+                    <button class="filter-btn" data-filter="video">Vidéo</button>
+                </div>
+                <div class="portfolio-grid">
+                    <div class="portfolio-item" data-category="web">
+                        <div class="portfolio-image">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="portfolio-info">
+                            <h4>Site Web Corporate</h4>
+                            <p>Développement d'un site vitrine pour une entreprise locale</p>
+                            <div class="portfolio-tech">
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>JavaScript</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="portfolio-item" data-category="design">
+                        <div class="portfolio-image">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="portfolio-info">
+                            <h4>Application Mobile UI</h4>
+                            <p>Design d'interface pour une application de réseautage</p>
+                            <div class="portfolio-tech">
+                                <span>Figma</span>
+                                <span>UI/UX</span>
+                                <span>Prototyping</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="portfolio-item" data-category="video">
+                        <div class="portfolio-image">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="portfolio-info">
+                            <h4>Vidéo Promotionnelle</h4>
+                            <p>Montage et post-production d'une vidéo marketing</p>
+                            <div class="portfolio-tech">
+                                <span>Premiere Pro</span>
+                                <span>After Effects</span>
+                                <span>Motion Graphics</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="portfolio-item" data-category="web">
+                        <div class="portfolio-image">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="portfolio-info">
+                            <h4>E-commerce Platform</h4>
+                            <p>Plateforme de vente en ligne avec système de paiement</p>
+                            <div class="portfolio-tech">
+                                <span>React</span>
+                                <span>Node.js</span>
+                                <span>MongoDB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="portfolio-item" data-category="design">
+                        <div class="portfolio-image">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <div class="portfolio-info">
+                            <h4>Identité Visuelle</h4>
+                            <p>Création complète d'identité visuelle pour startup</p>
+                            <div class="portfolio-tech">
+                                <span>Illustrator</span>
+                                <span>Photoshop</span>
+                                <span>Branding</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="portfolio-item" data-category="video">
+                        <div class="portfolio-image">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <div class="portfolio-info">
+                            <h4>Court Métrage</h4>
+                            <p>Réalisation et montage d'un court métrage documentaire</p>
+                            <div class="portfolio-tech">
+                                <span>Final Cut Pro</span>
+                                <span>DaVinci Resolve</span>
+                                <span>Storytelling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="contactWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-envelope"></i>
+                    Contact
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="contact">−</button>
+                    <button class="window-maximize" data-window="contact">□</button>
+                    <button class="window-close" data-window="contact">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <a href="mailto:sanogochristian74@gmail.com">sanogochristian74@gmail.com</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Téléphone</h4>
+                            <a href="tel:+2250161492067">+225 01 61 49 20 67</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Adresse</h4>
+                            <p>Marcory, Abidjan<br>Côte d'Ivoire</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>LinkedIn</h4>
+                            <a href="https://www.linkedin.com/in/mohamed-sanogo-680261225?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank">Mohamed SANOGO</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h4>Envoyez-moi un message</h4>
+                    <form id="contactForm">
+                        <input type="text" name="name" placeholder="Votre nom" required>
+                        <input type="email" name="email" placeholder="Votre email" required>
+                        <select name="subject" required>
+                            <option value="">Choisir un sujet</option>
+                            <option value="collaboration">Collaboration</option>
+                            <option value="projet">Nouveau projet</option>
+                            <option value="information">Demande d'information</option>
+                            <option value="stage">Opportunité de stage</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                        <textarea name="message" placeholder="Votre message" rows="4" required></textarea>
+                        <button type="submit">
+                            <i class="fas fa-paper-plane"></i>
+                            Envoyer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="calculatorWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-calculator"></i>
+                    Calculatrice
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="calculator">−</button>
+                    <button class="window-maximize" data-window="calculator">□</button>
+                    <button class="window-close" data-window="calculator">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="calculator">
+                    <div class="calculator-display">
+                        <input type="text" id="calcDisplay" readonly value="0">
+                    </div>
+                    <div class="calculator-buttons">
+                        <button class="calc-btn clear" onclick="clearCalculator()">C</button>
+                        <button class="calc-btn" onclick="deleteLast()">⌫</button>
+                        <button class="calc-btn operator" onclick="appendToDisplay('/')">/</button>
+                        <button class="calc-btn operator" onclick="appendToDisplay('*')">×</button>
+                        
+                        <button class="calc-btn" onclick="appendToDisplay('7')">7</button>
+                        <button class="calc-btn" onclick="appendToDisplay('8')">8</button>
+                        <button class="calc-btn" onclick="appendToDisplay('9')">9</button>
+                        <button class="calc-btn operator" onclick="appendToDisplay('-')">-</button>
+                        
+                        <button class="calc-btn" onclick="appendToDisplay('4')">4</button>
+                        <button class="calc-btn" onclick="appendToDisplay('5')">5</button>
+                        <button class="calc-btn" onclick="appendToDisplay('6')">6</button>
+                        <button class="calc-btn operator" onclick="appendToDisplay('+')">+</button>
+                        
+                        <button class="calc-btn" onclick="appendToDisplay('1')">1</button>
+                        <button class="calc-btn" onclick="appendToDisplay('2')">2</button>
+                        <button class="calc-btn" onclick="appendToDisplay('3')">3</button>
+                        <button class="calc-btn equals" onclick="calculateResult()" rowspan="2">=</button>
+                        
+                        <button class="calc-btn zero" onclick="appendToDisplay('0')">0</button>
+                        <button class="calc-btn" onclick="appendToDisplay('.')">.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="notepadWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-sticky-note"></i>
+                    Bloc-notes
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="notepad">−</button>
+                    <button class="window-maximize" data-window="notepad">□</button>
+                    <button class="window-close" data-window="notepad">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="notepad-toolbar">
+                    <button onclick="saveNote()"><i class="fas fa-save"></i> Sauvegarder</button>
+                    <button onclick="clearNote()"><i class="fas fa-trash"></i> Effacer</button>
+                    <button onclick="downloadNote()"><i class="fas fa-download"></i> Télécharger</button>
+                    <button onclick="toggleWordWrap()"><i class="fas fa-align-left"></i> Retour à la ligne</button>
+                </div>
+                <textarea id="notepadText" placeholder="Tapez vos notes ici..."></textarea>
+                <div class="notepad-status">
+                    <span id="charCount">0 caractères</span>
+                    <span id="wordCount">0 mots</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nouvelle fenêtre Musique -->
+        <div id="musicWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-music"></i>
+                    Lecteur Musique
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="music">−</button>
+                    <button class="window-maximize" data-window="music">□</button>
+                    <button class="window-close" data-window="music">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="music-player">
+                    <div class="album-art">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="track-info">
+                        <h4 id="trackTitle">Aucune musique sélectionnée</h4>
+                        <p id="trackArtist">Artiste inconnu</p>
+                    </div>
+                    <div class="player-controls">
+                        <button class="control-btn" id="prevBtn"><i class="fas fa-step-backward"></i></button>
+                        <button class="control-btn play-pause" id="playBtn"><i class="fas fa-play"></i></button>
+                        <button class="control-btn" id="nextBtn"><i class="fas fa-step-forward"></i></button>
+                    </div>
+                    <div class="progress-container">
+                        <span class="time" id="currentTime">0:00</span>
+                        <div class="progress-bar">
+                            <div class="progress" id="progress"></div>
+                        </div>
+                        <span class="time" id="duration">0:00</span>
+                    </div>
+                    <div class="volume-container">
+                        <i class="fas fa-volume-up"></i>
+                        <input type="range" class="volume-slider" min="0" max="100" value="50">
+                    </div>
+                    <div class="playlist">
+                        <h5>Playlist</h5>
+                        <div class="playlist-item active" data-track="0">
+                            <i class="fas fa-music"></i>
+                            <span>Track 1</span>
+                        </div>
+                        <div class="playlist-item" data-track="1">
+                            <i class="fas fa-music"></i>
+                            <span>Track 2</span>
+                        </div>
+                        <div class="playlist-item" data-track="2">
+                            <i class="fas fa-music"></i>
+                            <span>Track 3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nouvelle fenêtre Galerie -->
+        <div id="galleryWindow" class="window hidden">
+            <div class="window-header">
+                <div class="window-title">
+                    <i class="fas fa-images"></i>
+                    Galerie Photos
+                </div>
+                <div class="window-controls">
+                    <button class="window-minimize" data-window="gallery">−</button>
+                    <button class="window-maximize" data-window="gallery">□</button>
+                    <button class="window-close" data-window="gallery">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="gallery-toolbar">
+                    <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i> Grille</button>
+                    <button class="view-btn" data-view="list"><i class="fas fa-list"></i> Liste</button>
+                    <div class="gallery-search">
+                        <input type="text" placeholder="Rechercher des photos...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="gallery-info">
+                            <span>Projet Web 1</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="gallery-info">
+                            <span>Design UI/UX</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="gallery-info">
+                            <span>Montage Vidéo</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <div class="gallery-info">
+                            <span>Création Graphique</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="gallery-info">
+                            <span>App Mobile</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-image">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="gallery-info">
+                            <span>Code Source</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Démarrer -->
+        <div id="startMenu" class="start-menu hidden">
+            <div class="start-menu-header">
+                <div class="user-info">
+                    <div class="user-avatar-small">CS</div>
+                    <span>Christian SANOGO</span>
+                </div>
+            </div>
+            <div class="start-menu-content">
+                <div class="start-menu-section">
+                    <h4>Applications</h4>
+                    <div class="start-menu-item" data-window="about">
+                        <i class="fas fa-user-circle"></i>
+                        <span>À propos</span>
+                    </div>
+                    <div class="start-menu-item" data-window="skills">
+                        <i class="fas fa-tools"></i>
+                        <span>Compétences</span>
+                    </div>
+                    <div class="start-menu-item" data-window="experience">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Expérience</span>
+                    </div>
+                    <div class="start-menu-item" data-window="portfolio">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Portfolio</span>
+                    </div>
+                    <div class="start-menu-item" data-window="contact">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </div>
+                </div>
+                <div class="start-menu-section">
+                    <h4>Outils</h4>
+                    <div class="start-menu-item" data-window="calculator">
+                        <i class="fas fa-calculator"></i>
+                        <span>Calculatrice</span>
+                    </div>
+                    <div class="start-menu-item" data-window="notepad">
+                        <i class="fas fa-sticky-note"></i>
+                        <span>Bloc-notes</span>
+                    </div>
+                    <div class="start-menu-item" data-window="music">
+                        <i class="fas fa-music"></i>
+                        <span>Musique</span>
+                    </div>
+                    <div class="start-menu-item" data-window="gallery">
+                        <i class="fas fa-images"></i>
+                        <span>Galerie</span>
+                    </div>
+                </div>
+            </div>
+            <div class="start-menu-footer">
+                <button class="power-menu-btn" onclick="showShutdownDialog()">
+                    <i class="fas fa-power-off"></i>
+                    <span>Arrêter</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Barre des tâches -->
+        <div class="taskbar">
+            <div class="taskbar-left">
+                <button class="start-button" id="startButton">
+                    <i class="fab fa-windows"></i>
+                </button>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Taper ici pour rechercher">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="taskbar-apps" id="taskbarApps">
+                    <!-- Les applications ouvertes apparaîtront ici -->
+                </div>
+            </div>
+            
+            <div class="taskbar-right">
+                <div class="system-tray">
+                    <div class="notification-icon" title="Notifications" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="volume-control" title="Volume" id="volumeBtn">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                    <div class="network-status" title="Réseau">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="datetime" id="datetime">
+                        <div id="time" class="time"></div>
+                        <div id="date" class="date"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div id="notificationCenter" class="notification-center hidden">
+            <div class="notification-header">
+                <h3>Centre de notifications</h3>
+                <button class="clear-all" onclick="clearAllNotifications()">Effacer tout</button>
+            </div>
+            <div class="notifications-list" id="notificationsList">
+                <div class="notification-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="notification-content">
+                        <h4>Nouveau message</h4>
+                        <p>Vous avez reçu un nouveau message de contact</p>
+                        <span class="notification-time">Il y a 5 min</span>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <i class="fas fa-user-plus"></i>
+                    <div class="notification-content">
+                        <h4>Nouvelle connexion LinkedIn</h4>
+                        <p>Quelqu'un a consulté votre profil</p>
+                        <span class="notification-time">Il y a 1h</span>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <i class="fas fa-star"></i>
+                    <div class="notification-content">
+                        <h4>Projet terminé</h4>
+                        <p>Le projet SANCOFA a été livré avec succès</p>
+                        <span class="notification-time">Il y a 2h</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dialog de fermeture -->
+        <div id="shutdownDialog" class="shutdown-dialog hidden">
+            <div class="shutdown-content">
+                <h3>Que voulez-vous faire ?</h3>
+                <div class="shutdown-options">
+                    <button class="shutdown-btn" onclick="restartSystem()">
+                        <i class="fas fa-redo"></i>
+                        <span>Redémarrer</span>
+                    </button>
+                    <button class="shutdown-btn" onclick="shutdownSystem()">
+                        <i class="fas fa-power-off"></i>
+                        <span>Arrêter</span>
+                    </button>
+                    <button class="shutdown-btn" onclick="closeShutdownDialog()">
+                        <i class="fas fa-times"></i>
+                        <span>Annuler</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contrôle de volume -->
+        <div id="volumeControl" class="volume-control-panel hidden">
+            <div class="volume-slider-container">
+                <input type="range" class="volume-slider-main" min="0" max="100" value="50" orient="vertical">
+                <div class="volume-level">50</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

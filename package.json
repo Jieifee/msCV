@@ -1,0 +1,16 @@
+{
+  "name": "cv-windows-10",
+  "version": "1.0.0",
+  "description": "CV immersif avec interface Windows 10",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server",
+    "start": "live-server"
+  },
+  "keywords": ["cv", "windows-10", "portfolio"],
+  "author": "Christian SANOGO",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
