@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanogo Mohamed - Portfolio OS</title>
+    <meta name="description" content="Portfolio interactif immersif de Sanogo Mohamed - Étudiant en Communication Digitale et Design à l'UCAO-UUA">
+    <meta name="author" content="Sanogo Mohamed">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --os-purple: 262 83% 68%;
+            --os-blue: 217 91% 60%;
+            --os-dark: 222 47% 5%;
+            --os-darker: 222 47% 3%;
+            --os-panel: 222 47% 8%;
+            --os-glow: 262 83% 68%;
+            --foreground: 210 40% 98%;
+            --muted-foreground: 215 20% 65%;
+            --border: 222 47% 15%;
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: hsl(var(--os-dark));
+            color: hsl(var(--foreground));
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Boot Screen */
+        .boot-screen {
+            position: fixed;
+            inset: 0;
+            background: hsl(var(--os-dark));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .boot-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, hsl(var(--os-purple)), hsl(var(--os-blue)));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin-bottom: 30px;
+            animation: pulse-glow 2s ease-in-out infinite;
+            box-shadow: 0 0 40px hsl(var(--os-glow) / 0.4);
+        }
+
+        .boot-text {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: hsl(var(--muted-foreground));
+            margin: 8px 0;
+            opacity: 0;
+            animation: fade-in-up 0.5s ease-out forwards;
+        }
+
+        .boot-text:nth-child(2) { animation-delay: 0.3s; }
+        .boot-text:nth-child(3) { animation-delay: 0.6s; }
+        .boot-text:nth-child(4) { animation-delay: 0.9s; }
+        .boot-text:nth-child(5) { animation-delay: 1.2s; }
+        .boot-text:nth-child(6) { animation-delay: 1.5s; }
+        .boot-text:nth-child(7) { animation-delay: 1.8s; }
+
+        .boot-progress {
+            width: 300px;
+            height: 4px;
+            background: hsl(var(--os-panel));
+            border-radius: 2px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        .boot-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, hsl(var(--os-purple)), hsl(var(--os-blue)));
+            width: 0;
+            animation: progress 2.5s ease-out forwards;
+            box-shadow: 0 0 10px hsl(var(--os-glow) / 0.6);
+        }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, hsl(var(--os-purple)), hsl(var(--os-dark)), hsl(var(--os-blue)));
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9998;
+        }
+
+        .login-particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: hsl(var(--os-purple) / 0.3);
+            border-radius: 50%;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            animation: slide-up 0.5s ease-out;
+        }
+
+        .login-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .avatar-circle {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, hsl(var(--os-purple)), hsl(var(--os-blue)));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px hsl(var(--os-glow) / 0.4);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 0 20px hsl(var(--os-glow) / 0.3);
+        }
+
+        .login-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+        }
+
+        .login-info {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 30px;
+        }
+
+        .login-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 14px 48px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px hsl(var(--os-glow) / 0.3);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px hsl(var(--os-glow) / 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .power-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .power-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .time-display {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Desktop */
+        .desktop {
+            position: fixed;
+            inset: 0;
+            background: hsl(var(--os-dark));
+            display: none;
+            padding: 20px;
+        }
+
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(135deg, hsl(var(--os-panel) / 0.95), hsl(var(--os-panel) / 0.85));
+            backdrop-filter: blur(20px);
+            border-top: 1px solid hsl(var(--os-purple) / 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .taskbar-left {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .taskbar-icon {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: hsl(var(--foreground));
+        }
+
+        .taskbar-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px hsl(var(--os-glow) / 0.3);
+        }
+
+        .taskbar-icon.active {
+            background: rgba(124, 95, 255, 0.2);
+            border-bottom: 2px solid hsl(var(--os-purple));
+        }
+
+        .taskbar-right {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-size: 14px;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .desktop-icons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 100px);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .desktop-icon-img {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, hsl(var(--os-purple)), hsl(var(--os-blue)));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .desktop-icon-label {
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Window */
+        .window {
+            position: fixed;
+            background: linear-gradient(135deg, hsl(var(--os-panel) / 0.95), hsl(var(--os-panel) / 0.85));
+            backdrop-filter: blur(20px);
+            border: 1px solid hsl(var(--os-purple) / 0.2);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            display: none;
+            flex-direction: column;
+            z-index: 50;
+            animation: scale-in 0.2s ease-out;
+        }
+
+        .window.active {
+            display: flex;
+        }
+
+        .window-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid hsl(var(--border));
+            cursor: move;
+        }
+
+        .window-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .window-btn.close {
+            background: #ff5f56;
+        }
+
+        .window-btn.minimize {
+            background: #ffbd2e;
+        }
+
+        .window-btn.maximize {
+            background: #27c93f;
+        }
+
+        .window-content {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* About Window */
+        .about-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid hsl(var(--border) / 0.5);
+            margin-bottom: 32px;
+        }
+
+        .about-avatar {
+            width: 96px;
+            height: 96px;
+            background: linear-gradient(135deg, hsl(var(--os-purple)), hsl(var(--os-blue)));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px hsl(var(--os-glow) / 0.4);
+        }
+
+        .about-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px hsl(var(--os-glow) / 0.3);
+        }
+
+        .about-role {
+            color: hsl(var(--muted-foreground));
+            font-size: 16px;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .info-card {
+            padding: 16px;
+            background: hsl(var(--os-panel));
+            border: 1px solid hsl(var(--border) / 0.5);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: hsl(var(--os-purple) / 0.5);
+        }
+
+        .info-card-label {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-top: 8px;
+        }
+
+        .info-card-value {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .about-text {
+            line-height: 1.8;
+            color: hsl(var(--foreground) / 0.9);
+            margin-bottom: 16px;
+        }
+
+        .highlight-primary {
+            color: hsl(var(--os-purple));
+            font-weight: 600;
+        }
+
+        .highlight-secondary {
+            color: hsl(var(--os-blue));
+            font-weight: 600;
+        }
+
+        .goal-card {
+            padding: 24px;
+            background: linear-gradient(135deg, hsl(var(--os-purple) / 0.1), hsl(var(--os-blue) / 0.1));
+            border: 1px solid hsl(var(--os-purple) / 0.2);
+            border-radius: 12px;
+            margin-top: 32px;
+        }
+
+        .goal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        /* Skills Window */
+        .skills-section {
+            margin-bottom: 32px;
+        }
+
+        .skills-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skill-item {
+            margin-bottom: 16px;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .skill-name {
+            font-size: 14px;
+        }
+
+        .skill-level {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .skill-bar {
+            height: 6px;
+            background: hsl(var(--os-panel));
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, hsl(var(--os-purple)), hsl(var(--os-blue)));
+            border-radius: 3px;
+            box-shadow: 0 0 10px hsl(var(--os-glow) / 0.4);
+            transition: width 1s ease-out;
+        }
+
+        /* Experience Window */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, hsl(var(--os-purple)), hsl(var(--os-blue)));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 32px;
+            padding: 20px;
+            background: hsl(var(--os-panel));
+            border: 1px solid hsl(var(--border));
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            border-color: hsl(var(--os-purple) / 0.5);
+            box-shadow: 0 0 20px hsl(var(--os-glow) / 0.2);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 24px;
+            width: 12px;
+            height: 12px;
+            background: hsl(var(--os-purple));
+            border-radius: 50%;
+            box-shadow: 0 0 10px hsl(var(--os-glow) / 0.6);
+        }
+
+        .timeline-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .timeline-company {
+            color: hsl(var(--os-blue));
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 12px;
+        }
+
+        .timeline-desc {
+            color: hsl(var(--foreground) / 0.8);
+            line-height: 1.6;
+        }
+
+        /* Portfolio Window */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            position: relative;
+            padding: 24px;
+            background: hsl(var(--os-panel));
+            border: 1px solid hsl(var(--border) / 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, hsl(var(--os-purple) / 0.1), hsl(var(--os-blue) / 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover {
+            border-color: hsl(var(--os-purple) / 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-category {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 8px;
+        }
+
+        .project-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .project-desc {
+            font-size: 14px;
+            color: hsl(var(--foreground) / 0.7);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .project-tag {
+            font-size: 11px;
+            padding: 4px 12px;
+            background: hsl(var(--os-panel) / 0.5);
+            border: 1px solid hsl(var(--border));
+            border-radius: 12px;
+            color: hsl(var(--foreground) / 0.7);
+        }
+
+        /* Contact Window */
+        .contact-card {
+            background: linear-gradient(135deg, hsl(var(--os-panel)), hsl(var(--os-dark)));
+            border: 1px solid hsl(var(--os-purple) / 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, hsl(var(--os-purple)), hsl(var(--os-blue)));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-size: 12px;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 4px;
+        }
+
+        .contact-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .contact-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .contact-btn {
+            padding: 12px 24px;
+            background: hsl(var(--os-panel));
+            border: 1px solid hsl(var(--border));
+            border-radius: 8px;
+            color: hsl(var(--foreground));
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .contact-btn:hover {
+            background: hsl(var(--os-purple) / 0.2);
+            border-color: hsl(var(--os-purple) / 0.5);
+        }
+
+        /* Shutdown Screen */
+        .shutdown-screen {
+            position: fixed;
+            inset: 0;
+            background: hsl(var(--os-dark));
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .shutdown-content {
+            text-align: center;
+            animation: fade-out 2s ease-out;
+        }
+
+        .shutdown-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+        }
+
+        .shutdown-text {
+            font-size: 24px;
+            color: hsl(var(--foreground) / 0.8);
+            margin-bottom: 12px;
+        }
+
+        .shutdown-subtext {
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Animations */
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes progress {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scale-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fade-out {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-title {
+                font-size: 1.8rem;
+            }
+
+            .login-subtitle {
+                font-size: 1rem;
+            }
+
+            .login-avatar {
+                width: 90px;
+                height: 90px;
+            }
+
+            .btn {
+                padding: 12px 32px;
+                font-size: 14px;
+            }
+
+            .window {
+                left: 10px !important;
+                right: 10px !important;
+                top: 60px !important;
+                bottom: 80px !important;
+                width: auto !important;
+                height: auto !important;
+            }
+
+            .about-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 30px;
+            }
+
+            .timeline::before {
+                left: 15px;
+            }
+
+            .timeline-item::before {
+                left: -23px;
+            }
+
+            .desktop-icons {
+                grid-template-columns: repeat(auto-fill, 80px);
+                gap: 12px;
+            }
+
+            .taskbar {
+                height: 70px;
+                padding: 0 10px;
+            }
+
+            .taskbar-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .time-display, .power-btn {
+                font-size: 12px;
+            }
+
+            .boot-progress {
+                width: 200px;
+            }
+
+            .contact-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .about-name {
+                font-size: 22px;
+            }
+
+            .window-content {
+                padding: 16px;
+            }
+
+            .taskbar-right {
+                font-size: 11px;
+                gap: 8px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(var(--os-panel));
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: hsl(var(--os-purple) / 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: hsl(var(--os-purple) / 0.7);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Boot Screen -->
+    <div id="bootScreen" class="boot-screen">
+        <div class="boot-logo">💻</div>
+        <div>
+            <div class="boot-text">⚡ Initialisation du système personnel...</div>
+            <div class="boot-text">📁 Chargement du profil : SANOGO MOHAMED</div>
+            <div class="boot-text">🎓 Statut : Étudiant en Communication Digitale et Design</div>
+            <div class="boot-text">🏫 Université : UCAO-UUA</div>
+            <div class="boot-text">📍 Localisation : Abidjan, Côte d'Ivoire</div>
+            <div class="boot-text">👤 Âge : 22 ans</div>
+            <div class="boot-text">✅ Système prêt...</div>
+        </div>
+        <div class="boot-progress">
+            <div class="boot-progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-particles" id="particles"></div>
+        
+        <div class="login-card">
+            <div class="login-avatar">
+                <div class="avatar-circle">
+                    <svg width="60" height="60" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="avatar-ring"></div>
+            </div>
+            
+            <h1 class="login-title">Sanogo Mohamed</h1>
+            <p class="login-subtitle">Étudiant en Communication Digitale et Design</p>
+            <p class="login-info">UCAO-UUA | Master 2 | Abidjan, Côte d'Ivoire</p>
+            
+            <div class="login-buttons">
+                <button class="btn btn-primary" onclick="login()">Se connecter</button>
+                <button class="btn btn-secondary" onclick="login()">Mode invité</button>
+            </div>
+        </div>
+        
+        <button class="power-btn" onclick="shutdown()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                <line x1="12" y1="2" x2="12" y2="12"></line>
+            </svg>
+        </button>
+        
+        <div class="time-display" id="loginTime"></div>
+    </div>
+
+    <!-- Shutdown Screen -->
+    <div id="shutdownScreen" class="shutdown-screen">
+        <div class="shutdown-content">
+            <div class="shutdown-icon">⏻</div>
+            <div class="shutdown-text">Arrêt du système...</div>
+            <div class="shutdown-subtext">Au revoir, à bientôt!</div>
+        </div>
+    </div>
+
+    <!-- Desktop -->
+    <div id="desktop" class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openWindow('aboutWindow')">
+                <div class="desktop-icon-img">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="desktop-icon-label">À propos</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('skillsWindow')">
+                <div class="desktop-icon-img">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div class="desktop-icon-label">Compétences</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('experienceWindow')">
+                <div class="desktop-icon-img">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </div>
+                <div class="desktop-icon-label">Expérience</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('portfolioWindow')">
+                <div class="desktop-icon-img">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <div class="desktop-icon-label">Portfolio</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('contactWindow')">
+                <div class="desktop-icon-img">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                </div>
+                <div class="desktop-icon-label">Contact</div>
+            </div>
+        </div>
+
+        <!-- Windows -->
+        <!-- About Window -->
+        <div id="aboutWindow" class="window" style="width: 700px; height: 600px; left: 100px; top: 80px;">
+            <div class="window-header">
+                <div class="window-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>À propos de moi</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn close" onclick="closeWindow('aboutWindow')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="about-header">
+                    <div class="about-avatar">
+                        <svg width="48" height="48" fill="white" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="about-name">Sanogo Mohamed</h2>
+                        <p class="about-role">Créatif Multidisciplinaire</p>
+                    </div>
+                </div>
+
+                <div class="info-cards">
+                    <div class="info-card">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <div class="info-card-label">Âge</div>
+                        <div class="info-card-value">22 ans</div>
+                    </div>
+                    <div class="info-card">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <div class="info-card-label">Localisation</div>
+                        <div class="info-card-value">Abidjan, CI</div>
+                    </div>
+                    <div class="info-card">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                        <div class="info-card-label">Formation</div>
+                        <div class="info-card-value">Master 2</div>
+                    </div>
+                </div>
+
+                <div class="about-text">
+                    <p>Je suis <span class="highlight-primary">Sanogo Mohamed</span>, étudiant en <span class="highlight-secondary">Master 2 de Communication</span> à l'UCAO-UUA.</p>
+                </div>
+                <div class="about-text">
+                    <p>Passionné par les médias sociaux, le marketing digital et la création de contenus, je conçois des expériences alliant <span class="highlight-primary">stratégie</span>, <span class="highlight-secondary">design</span> et <span class="highlight-primary">innovation</span>.</p>
+                </div>
+                <div class="about-text">
+                    <p>J'aime transformer les idées en visuels et les concepts en émotions. Mon approche créative combine rigueur professionnelle et audace artistique.</p>
+                </div>
+
+                <div class="goal-card">
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <span style="font-size: 24px;">🎯</span>
+                        <div>
+                            <h3 class="goal-title">Mon Objectif</h3>
+                            <p style="color: hsl(var(--foreground) / 0.8);">Devenir un acteur clé du digital africain, en reliant créativité et technologie pour créer des expériences mémorables.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Window -->
+        <div id="skillsWindow" class="window" style="width: 700px; height: 600px; left: 150px; top: 100px;">
+            <div class="window-header">
+                <div class="window-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>Mes Compétences</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn close" onclick="closeWindow('skillsWindow')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="skills-section">
+                    <h3 class="skills-title">💼 Digital & Marketing</h3>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Communication digitale</span>
+                            <span class="skill-level">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Meta Business Suite</span>
+                            <span class="skill-level">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Google Analytics</span>
+                            <span class="skill-level">75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Stratégie de contenu</span>
+                            <span class="skill-level">88%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skills-section">
+                    <h3 class="skills-title">🎨 Création & Design</h3>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Design graphique</span>
+                            <span class="skill-level">92%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 92%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Montage vidéo et audio</span>
+                            <span class="skill-level">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Webdesign</span>
+                            <span class="skill-level">80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skills-section">
+                    <h3 class="skills-title">💻 Développement</h3>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">HTML / CSS</span>
+                            <span class="skill-level">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">JavaScript</span>
+                            <span class="skill-level">75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">PHP</span>
+                            <span class="skill-level">70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skills-section">
+                    <h3 class="skills-title">🌍 Langues</h3>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">🇫🇷 Français</span>
+                            <span class="skill-level">Natif</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">🇬🇧 Anglais</span>
+                            <span class="skill-level">Fluent</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience Window -->
+        <div id="experienceWindow" class="window" style="width: 750px; height: 600px; left: 200px; top: 120px;">
+            <div class="window-header">
+                <div class="window-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    <span>Expérience Professionnelle</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn close" onclick="closeWindow('experienceWindow')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">Manager de communauté</h3>
+                        <div class="timeline-company">PIXLSTUDIO</div>
+                        <div class="timeline-date">Juillet 2025 - Octobre 2025</div>
+                        <p class="timeline-desc">Gestion de 8 marques, animation des réseaux sociaux, création de contenu et reporting stratégique.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">Community Manager</h3>
+                        <div class="timeline-company">AMG Records</div>
+                        <div class="timeline-date">Juillet 2025 - Août 2025</div>
+                        <p class="timeline-desc">Création de contenus artistiques et gestion digitale à distance.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">Webdesigner / Graphiste</h3>
+                        <div class="timeline-company">SANCOFA AGENCY</div>
+                        <div class="timeline-date">Octobre 2024 - Juillet 2025</div>
+                        <p class="timeline-desc">Conception de logos, sites vitrines et maquettes digitales.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">Responsable communications</h3>
+                        <div class="timeline-company">SHALOMMOOD MUSIC/COM</div>
+                        <div class="timeline-date">Janvier 2023 - Août 2023 · 8 mois</div>
+                        <p class="timeline-desc">Shalommood music/com est un label de musique gospel indépendant et également une entreprise de création visuelle (création graphique, clip, montage…). Compétences : Travail d'équipe, Communication stratégique, Stratégie numérique.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">Rédacteur</h3>
+                        <div class="timeline-company">IVOIRBOOST TV</div>
+                        <div class="timeline-date">Novembre 2020 - Avril 2023 · 2 ans 6 mois</div>
+                        <p class="timeline-desc">IVOIRBOOST est un blog en ligne qui se focalise sur le divertissement, la musique, le cinéma. Compétences : Édition de contenu, Production de vidéo, SEO, Montage vidéo.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">Compositeur</h3>
+                        <div class="timeline-company">Watoo production</div>
+                        <div class="timeline-date">Juin 2021 - Octobre 2022 · 1 an 5 mois</div>
+                        <p class="timeline-desc">Compétences : Communication stratégique, Communication écrite, Communication d'entreprise, Communication visuelle, Marketing.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">Rédacteur</h3>
+                        <div class="timeline-company">Opera News Hub</div>
+                        <div class="timeline-date">Février 2021 - Septembre 2024</div>
+                        <p class="timeline-desc">Rédaction d'articles et optimisation de la visibilité.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Window -->
+        <div id="portfolioWindow" class="window" style="width: 800px; height: 600px; left: 250px; top: 140px;">
+            <div class="window-header">
+                <div class="window-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Portfolio</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn close" onclick="closeWindow('portfolioWindow')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="portfolio-grid">
+                    <div class="project-card">
+                        <div class="project-content">
+                            <div class="project-category">Agence de Design</div>
+                            <h3 class="project-title">SANCOFA AGENCY</h3>
+                            <p class="project-desc">Conception de logos, identités visuelles et sites vitrines pour diverses marques.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Branding</span>
+                                <span class="project-tag">Webdesign</span>
+                                <span class="project-tag">UI/UX</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-content">
+                            <div class="project-category">Fashion & Branding</div>
+                            <h3 class="project-title">FARRAFINA MODELLI</h3>
+                            <p class="project-desc">Direction artistique et création de contenus visuels pour la marque.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Direction artistique</span>
+                                <span class="project-tag">Photographie</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-content">
+                            <div class="project-category">Application Web</div>
+                            <h3 class="project-title">PDF to Word Converter</h3>
+                            <p class="project-desc">Outil de conversion de documents avec interface moderne et intuitive.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Développement Web</span>
+                                <span class="project-tag">UI Design</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-content">
+                            <div class="project-category">Plateforme Digitale</div>
+                            <h3 class="project-title">WeProvide</h3>
+                            <p class="project-desc">Conception et développement d'une plateforme de services.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Web Development</span>
+                                <span class="project-tag">Design System</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-content">
+                            <div class="project-category">Artiste & Producteur</div>
+                            <h3 class="project-title">KNG - Projets Musicaux</h3>
+                            <p class="project-desc">Création musicale, clips vidéo et direction artistique sous l'alias KNG.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Production musicale</span>
+                                <span class="project-tag">Montage vidéo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-content">
+                            <div class="project-category">Community Management</div>
+                            <h3 class="project-title">Campagnes Social Media</h3>
+                            <p class="project-desc">Gestion de 8 marques avec création de contenus et stratégies digitales.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Social Media</span>
+                                <span class="project-tag">Content Creation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Window -->
+        <div id="contactWindow" class="window" style="width: 600px; height: 550px; left: 300px; top: 160px;">
+            <div class="window-header">
+                <div class="window-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <span>Contact</span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn close" onclick="closeWindow('contactWindow')"></button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="contact-card">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <div class="contact-label">Email</div>
+                            <div class="contact-value">sanogochristian74@gmail.com</div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <div class="contact-label">Téléphone</div>
+                            <div class="contact-value">+225 0161492067</div>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </div>
+                        <div class="contact-info">
+                            <div class="contact-label">Adresse</div>
+                            <div class="contact-value">Marcory, Abidjan, Côte d'Ivoire</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-buttons">
+                    <button class="contact-btn" onclick="window.location.href='mailto:sanogochristian74@gmail.com'">
+                        ✉️ Envoyer un mail
+                    </button>
+                    <button class="contact-btn" onclick="window.open('https://wa.me/2250161492067', '_blank')">
+                        💬 WhatsApp
+                    </button>
+                    <button class="contact-btn" onclick="window.open('https://www.linkedin.com/in/sanogo-mohamed', '_blank')">
+                        🔗 LinkedIn
+                    </button>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid hsl(var(--border)); color: hsl(var(--muted-foreground)); font-size: 12px;">
+                    © 2025 Sanogo Mohamed — Tous droits réservés
+                </div>
+            </div>
+        </div>
+
+        <!-- Taskbar -->
+        <div class="taskbar">
+            <div class="taskbar-left">
+                <button class="taskbar-icon" title="Menu" onclick="alert('Menu en construction')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <button id="aboutTaskbar" class="taskbar-icon" onclick="openWindow('aboutWindow')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+                <button id="skillsTaskbar" class="taskbar-icon" onclick="openWindow('skillsWindow')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </button>
+                <button id="experienceTaskbar" class="taskbar-icon" onclick="openWindow('experienceWindow')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                </button>
+                <button id="portfolioTaskbar" class="taskbar-icon" onclick="openWindow('portfolioWindow')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+                <button id="contactTaskbar" class="taskbar-icon" onclick="openWindow('contactWindow')">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="taskbar-right">
+                <button class="taskbar-icon" onclick="shutdown()" title="Éteindre">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                        <line x1="12" y1="2" x2="12" y2="12"></line>
+                    </svg>
+                </button>
+                <span id="desktopTime"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Boot sequence
+        setTimeout(() => {
+            document.getElementById('bootScreen').classList.add('hidden');
+            document.getElementById('loginScreen').style.display = 'flex';
+            createParticles();
+            updateTime();
+        }, 3000);
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (3 + Math.random() * 2) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Update time displays
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            const loginTimeEl = document.getElementById('loginTime');
+            const desktopTimeEl = document.getElementById('desktopTime');
+            if (loginTimeEl) loginTimeEl.textContent = timeString;
+            if (desktopTimeEl) desktopTimeEl.textContent = timeString;
+            setTimeout(updateTime, 60000);
+        }
+
+        // Login function
+        function login() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('desktop').style.display = 'block';
+        }
+
+        // Shutdown function
+        function shutdown() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('desktop').style.display = 'none';
+            document.getElementById('shutdownScreen').style.display = 'flex';
+            
+            setTimeout(() => {
+                document.getElementById('shutdownScreen').style.display = 'none';
+                document.getElementById('bootScreen').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('bootScreen').classList.add('hidden');
+                    document.getElementById('loginScreen').style.display = 'flex';
+                }, 3000);
+            }, 2000);
+        }
+
+        // Window management
+        let activeWindows = [];
+        let zIndexCounter = 50;
+
+        function openWindow(windowId) {
+            const win = document.getElementById(windowId);
+            if (!win) return;
+            
+            win.style.display = 'flex';
+            win.style.zIndex = ++zIndexCounter;
+            win.classList.add('active');
+            
+            if (!activeWindows.includes(windowId)) {
+                activeWindows.push(windowId);
+            }
+            
+            updateTaskbarIcons();
+        }
+
+        function closeWindow(windowId) {
+            const win = document.getElementById(windowId);
+            if (!win) return;
+            
+            win.style.display = 'none';
+            win.classList.remove('active');
+            activeWindows = activeWindows.filter(id => id !== windowId);
+            
+            updateTaskbarIcons();
+        }
+
+        function updateTaskbarIcons() {
+            const icons = {
+                'aboutWindow': 'aboutTaskbar',
+                'skillsWindow': 'skillsTaskbar',
+                'experienceWindow': 'experienceTaskbar',
+                'portfolioWindow': 'portfolioTaskbar',
+                'contactWindow': 'contactTaskbar'
+            };
+            
+            Object.entries(icons).forEach(([windowId, iconId]) => {
+                const icon = document.getElementById(iconId);
+                if (icon) {
+                    if (activeWindows.includes(windowId)) {
+                        icon.classList.add('active');
+                    } else {
+                        icon.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // Simple drag functionality for windows
+        let draggedWindow = null;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.window-header') && !e.target.closest('.window-btn')) {
+                draggedWindow = e.target.closest('.window');
+                const rect = draggedWindow.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                draggedWindow.style.zIndex = ++zIndexCounter;
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (draggedWindow) {
+                const x = e.clientX - offsetX;
+                const y = e.clientY - offsetY;
+                draggedWindow.style.left = Math.max(0, Math.min(x, window.innerWidth - draggedWindow.offsetWidth)) + 'px';
+                draggedWindow.style.top = Math.max(0, Math.min(y, window.innerHeight - draggedWindow.offsetHeight - 60)) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            draggedWindow = null;
+        });
+
+        // Initialize
+        updateTime();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
