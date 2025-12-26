@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOHAMED SANOGO | OFFICIAL PORTFOLIO</title>
+    <title>MOHAMED SANOGO | THE FINAL CUT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -61,6 +61,19 @@
             40% { transform: scaleY(0.002) scaleX(1.2); filter: brightness(2); background: #fff; }
             70% { transform: scaleY(0.002) scaleX(0.2); filter: brightness(5); background: #fff; }
             100% { transform: scaleY(0) scaleX(0); filter: brightness(10); background: #000; }
+        }
+
+        /* Message d'intro cinématographique */
+        #god-message {
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 6000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 1s ease;
         }
 
         /* Grilles adaptatives */
@@ -121,7 +134,7 @@
         }
         .glitch-active { animation: glitch 0.3s ease-in-out; }
 
-        /* Scrollbars discrètes */
+        /* Scrollbars */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
@@ -170,6 +183,26 @@
             transform: scale(1.1);
             color: #fff;
         }
+
+        /* Bouton TAP spécial */
+        .tap-button {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #888;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        .tap-button:hover {
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
     </style>
 </head>
 <body class="film-grain">
@@ -184,32 +217,45 @@
         </div>
     </div>
 
+    <!-- MESSAGE INTRO: DIRECTED BY GOD -->
+    <div id="god-message">
+        <div class="text-center">
+            <h2 class="mono text-[10px] tracking-[0.8em] text-zinc-500 mb-2 uppercase">Sanogo Production</h2>
+            <h1 class="text-2xl md:text-3xl font-light tracking-[0.4em] text-white uppercase italic">Directed by God</h1>
+        </div>
+    </div>
+
     <!-- LOADER / CLAP -->
     <div id="loader" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-[5000] transition-opacity duration-500">
-        <div class="cursor-pointer group text-center" onclick="bootSystem()">
-            <div class="w-40 h-40 mb-6 mx-auto">
-                <svg viewBox="0 0 200 200" class="w-full h-full">
-                    <rect x="20" y="70" width="160" height="100" fill="#0a0a0a" stroke="white" stroke-width="2"/>
-                    <g id="clap-top" style="transform-origin: 20px 70px; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)">
-                        <rect x="20" y="30" width="160" height="40" fill="#0a0a0a" stroke="white" stroke-width="2"/>
-                        <path d="M20 30L50 70M80 30L110 70M140 30L170 70" stroke="white" stroke-width="12"/>
-                    </g>
-                    <text x="100" y="115" fill="white" font-family="monospace" font-size="10" text-anchor="middle">SANOGO_PROD</text>
-                    <text x="100" y="145" fill="#3b82f6" font-family="monospace" font-size="8" text-anchor="middle" class="animate-pulse tracking-widest uppercase">Tap to Action</text>
-                </svg>
+        <div class="text-center">
+            <div class="cursor-pointer group mb-10" onclick="bootSystem()">
+                <div class="w-40 h-40 mx-auto">
+                    <svg viewBox="0 0 200 200" class="w-full h-full">
+                        <rect x="20" y="70" width="160" height="100" fill="#0a0a0a" stroke="white" stroke-width="2"/>
+                        <g id="clap-top" style="transform-origin: 20px 70px; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)">
+                            <rect x="20" y="30" width="160" height="40" fill="#0a0a0a" stroke="white" stroke-width="2"/>
+                            <path d="M20 30L50 70M80 30L110 70M140 30L170 70" stroke="white" stroke-width="12"/>
+                        </g>
+                        <text x="100" y="115" fill="white" font-family="monospace" font-size="10" text-anchor="middle">SANOGO_PROD</text>
+                        <text x="100" y="145" fill="#333" font-family="monospace" font-size="8" text-anchor="middle">ROLL: V5_FINAL</text>
+                    </svg>
+                </div>
             </div>
+            <button onclick="bootSystem()" class="tap-button animate-pulse">
+                Tap to Record
+            </button>
         </div>
     </div>
 
     <!-- MAIN INTERFACE -->
-    <div id="app" class="app-grid hidden opacity-0 transition-opacity duration-700">
+    <div id="app" class="app-grid hidden opacity-0 transition-opacity duration-1000">
         
         <!-- HEADER -->
         <header class="h-10 bg-[#161616] border-b border-[#222] flex items-center justify-between px-4 z-[100]">
             <div class="flex items-center gap-4">
                 <div class="flex gap-1.5">
-                    <div class="w-3 h-3 rounded-full bg-[#ff5f56] cursor-pointer hover:brightness-125 transition-all shadow-sm" onclick="shutDown()" title="Éteindre"></div>
-                    <div class="w-3 h-3 rounded-full bg-[#ffbd2e] cursor-pointer opacity-80 hover:opacity-100" onclick="softReboot()" title="Redémarrer"></div>
+                    <div class="w-3 h-3 rounded-full bg-[#ff5f56] cursor-pointer hover:brightness-125 shadow-sm" onclick="shutDown()"></div>
+                    <div class="w-3 h-3 rounded-full bg-[#ffbd2e] cursor-pointer opacity-80" onclick="softReboot()"></div>
                     <div class="w-3 h-3 rounded-full bg-[#27c93f] opacity-50"></div>
                 </div>
                 <div class="h-4 w-px bg-zinc-800 mx-2 hidden sm:block"></div>
@@ -222,16 +268,12 @@
 
             <div class="flex items-center gap-3">
                 <div class="flex bg-black p-0.5 rounded border border-zinc-800 text-[9px] font-bold mono">
-                    <button onclick="switchLang('fr')" id="lang-fr" class="px-2 py-1 rounded bg-blue-600 text-white transition-all">FR</button>
-                    <button onclick="switchLang('en')" id="lang-en" class="px-2 py-1 rounded text-zinc-500 hover:text-white transition-all">EN</button>
+                    <button onclick="switchLang('fr')" id="lang-fr" class="px-2 py-1 rounded bg-blue-600 text-white">FR</button>
+                    <button onclick="switchLang('en')" id="lang-en" class="px-2 py-1 rounded text-zinc-500">EN</button>
                 </div>
                 <div class="flex gap-2 ml-2">
-                    <button onclick="softReboot()" class="btn-action text-zinc-500" title="Restart">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                    </button>
-                    <button onclick="shutDown()" class="btn-action text-zinc-500 hover:text-red-500" title="Shutdown">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </button>
+                    <button onclick="softReboot()" class="btn-action text-zinc-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
+                    <button onclick="shutDown()" class="btn-action text-zinc-500 hover:text-red-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></button>
                 </div>
             </div>
         </header>
@@ -265,7 +307,7 @@
                         <h3 class="text-[9px] font-bold text-zinc-600 uppercase">Metadata (Contact)</h3>
                         <div class="text-[10px] mono space-y-1.5 text-zinc-500">
                             <p class="flex justify-between"><span>TEL:</span> <span class="text-zinc-300">+225 0161492067</span></p>
-                            <p class="flex flex-col"><span>MAIL:</span> <span class="text-blue-400 truncate">sanogochristian74@gmail.com</span></p>
+                            <p class="flex flex-col"><span>MAIL:</span> <span class="text-blue-400 truncate text-[9px]">sanogochristian74@gmail.com</span></p>
                             <p class="flex justify-between"><span>LOC:</span> <span class="text-zinc-300">Abidjan, CI</span></p>
                         </div>
                     </div>
@@ -278,18 +320,15 @@
                         <div id="monitor-content" class="relative z-10 p-6 text-center transform transition-all duration-500 opacity-0">
                             <span class="px-2 py-0.5 bg-blue-600/10 border border-blue-500/20 text-blue-500 text-[8px] font-bold uppercase rounded mb-4 inline-block tracking-[0.2em]">Source Preview</span>
                             
-                            <!-- Titre Entreprise -->
                             <h2 id="mon-title" class="text-3xl md:text-5xl lg:text-6xl font-black italic uppercase tracking-tighter leading-none mb-2">--</h2>
                             
-                            <!-- Poste & Période -->
                             <div class="flex flex-col md:flex-row items-center justify-center gap-1 md:gap-3 mb-4">
                                 <span id="mon-role" class="mono text-[10px] md:text-xs text-blue-500 font-bold uppercase tracking-widest">--</span>
                                 <span class="hidden md:inline text-zinc-700 text-xs">|</span>
                                 <span id="mon-period" class="mono text-[10px] md:text-xs text-zinc-500 font-bold tracking-widest">--</span>
                             </div>
 
-                            <!-- Description -->
-                            <p id="mon-desc" class="text-[11px] md:text-sm text-zinc-400 mono max-w-lg mx-auto leading-relaxed border-t border-zinc-900 pt-4 opacity-90">--</p>
+                            <p id="mon-desc" class="text-[11px] md:text-sm text-zinc-400 mono max-w-md mx-auto leading-relaxed border-t border-zinc-900 pt-4 opacity-90">--</p>
                             
                             <div class="mt-8 flex justify-center gap-6">
                                 <div class="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-white transition-all cursor-pointer">
@@ -323,11 +362,12 @@
             </aside>
         </div>
 
+        <!-- TIMELINE FOOTER -->
         <footer class="timeline-footer bg-[#0c0c0c] border-t border-[#222] flex flex-col">
             <div class="h-7 border-b border-zinc-900 flex items-center px-4 justify-between bg-[#111]">
                 <div class="mono text-[8px] text-zinc-600 flex gap-4">
                     <span class="text-blue-500 font-bold">TIMELINE: PORTFOLIO_MOHAMED_V5</span>
-                    <span class="hidden sm:block">FPS: 24.00</span>
+                    <span class="hidden sm:block">RESOLUTION: 3840x2160</span>
                 </div>
                 <div class="text-[8px] mono text-zinc-700 uppercase">MOHAMED SANOGO | 22 ans</div>
             </div>
@@ -416,20 +456,43 @@
 
         function bootSystem() {
             const clap = document.getElementById('clap-top');
+            const loader = document.getElementById('loader');
+            const godMsg = document.getElementById('god-message');
+            const app = document.getElementById('app');
+
+            // 1. Clapper Action
             clap.style.transform = "rotate(-35deg)";
+            
             setTimeout(() => {
                 clap.style.transform = "rotate(0deg)";
+                
+                // 2. Fade Out Loader
                 setTimeout(() => {
-                    document.getElementById('loader').classList.add('opacity-0');
+                    loader.classList.add('opacity-0');
+                    
                     setTimeout(() => {
-                        document.getElementById('loader').style.display = 'none';
-                        const app = document.getElementById('app');
-                        app.classList.remove('hidden');
-                        setTimeout(() => app.classList.remove('opacity-0'), 50);
-                        if(!isSystemOn) {
-                            init();
-                            isSystemOn = true;
-                        }
+                        loader.style.display = 'none';
+                        
+                        // 3. Show "Directed by God"
+                        godMsg.style.display = 'flex';
+                        setTimeout(() => {
+                            godMsg.style.opacity = '1';
+                            
+                            // 4. Reveal App after cinematic pause
+                            setTimeout(() => {
+                                godMsg.style.opacity = '0';
+                                
+                                setTimeout(() => {
+                                    godMsg.style.display = 'none';
+                                    app.classList.remove('hidden');
+                                    setTimeout(() => app.classList.remove('opacity-0'), 50);
+                                    if(!isSystemOn) {
+                                        init();
+                                        isSystemOn = true;
+                                    }
+                                }, 1000);
+                            }, 2500); // Temps d'affichage du message
+                        }, 100);
                     }, 500);
                 }, 400);
             }, 300);
@@ -445,21 +508,7 @@
         }
 
         function softReboot() {
-            const overlay = document.getElementById('shutdown-overlay');
-            const rebootUi = document.getElementById('reboot-ui');
-            const loader = document.getElementById('loader');
-            const app = document.getElementById('app');
-            const clap = document.getElementById('clap-top');
-
-            overlay.classList.remove('shutdown-anim');
-            rebootUi.classList.add('hidden');
-            app.classList.add('hidden', 'opacity-0');
-            
-            loader.style.display = 'flex';
-            setTimeout(() => {
-                loader.classList.remove('opacity-0');
-                clap.style.transform = "rotate(0deg)";
-            }, 50);
+            location.reload(); // Plus propre pour réinitialiser la séquence d'intro
         }
 
         function init() {
@@ -496,8 +545,8 @@
 
         function switchLang(lang) {
             currentLang = lang;
-            document.getElementById('lang-fr').className = lang === 'fr' ? 'px-2 py-1 rounded bg-blue-600 text-white transition-all' : 'px-2 py-1 rounded text-zinc-500 hover:text-white transition-all';
-            document.getElementById('lang-en').className = lang === 'en' ? 'px-2 py-1 rounded bg-blue-600 text-white transition-all' : 'px-2 py-1 rounded text-zinc-500 hover:text-white transition-all';
+            document.getElementById('lang-fr').className = lang === 'fr' ? 'px-2 py-1 rounded bg-blue-600 text-white' : 'px-2 py-1 rounded text-zinc-500';
+            document.getElementById('lang-en').className = lang === 'en' ? 'px-2 py-1 rounded bg-blue-600 text-white' : 'px-2 py-1 rounded text-zinc-500';
             render();
         }
 
@@ -571,7 +620,7 @@
             document.getElementById('video-track').innerHTML = data.scenes.map((s, i) => `
                 <div class="timeline-item video-clip ${i === activeIdx ? 'active' : ''}" onclick="setScene(${i})">
                     <div class="flex justify-between items-start mb-1">
-                        <span class="text-[7px] mono text-zinc-500">SCN_0${s.id}</span>
+                        <span class="text-[7px] mono text-zinc-500">CLIP_0${s.id}</span>
                         <span class="text-[7px] mono text-blue-500">${currentLang === 'fr' ? 'SÉQUENCE' : 'SEQUENCE'}</span>
                     </div>
                     <p class="text-[10px] font-black truncate text-white uppercase">${s.title}</p>
