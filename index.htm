@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOHAMED SANOGO | THE FINAL CUT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-darker: #050505;
+            --bg-panel: #0f0f0f;
+            --accent: #3b82f6;
+            --border: #222222;
+            --text-dim: #666666;
+            --danger: #ef4444;
+        }
+
+        body {
+            background-color: #000;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Effet de grain cinématique */
+        .film-grain::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+        /* Système d'extinction CRT */
+        #shutdown-overlay {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 9999;
+            display: none;
+            pointer-events: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shutdown-anim {
+            display: flex !important;
+            animation: crt-off 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            pointer-events: all !important;
+        }
+
+        @keyframes crt-off {
+            0% { transform: scaleY(1) scaleX(1); filter: brightness(1); background: #fff; }
+            40% { transform: scaleY(0.002) scaleX(1.2); filter: brightness(2); background: #fff; }
+            70% { transform: scaleY(0.002) scaleX(0.2); filter: brightness(5); background: #fff; }
+            100% { transform: scaleY(0) scaleX(0); filter: brightness(10); background: #000; }
+        }
+
+        /* Message d'intro cinématographique */
+        #god-message {
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 6000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        /* Grilles adaptatives */
+        .app-grid {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--bg-darker);
+        }
+
+        .workspace {
+            display: grid;
+            flex: 1;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 1px;
+            background: var(--border);
+            overflow: hidden;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+                overflow-y: auto;
+            }
+            .app-grid { height: auto; min-height: 100vh; }
+            .timeline-footer { position: sticky; bottom: 0; z-index: 50; }
+        }
+
+        .panel { background: var(--bg-panel); position: relative; }
+
+        /* Moniteur Master */
+        .monitor-wrapper {
+            width: 100%;
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .monitor-container {
+            aspect-ratio: 16 / 9;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+
+        /* Glitch transition */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            25% { transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+            50% { transform: translate(2px, -2px); filter: brightness(1.5); }
+            75% { transform: translate(-1px, -1px); filter: invert(0.1); }
+            100% { transform: translate(0); }
+        }
+        .glitch-active { animation: glitch 0.3s ease-in-out; }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* Timeline Items */
+        .timeline-item {
+            min-width: 180px;
+            height: 40px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-left: 3px solid #444;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .timeline-item.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-left-color: var(--accent);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .playhead {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--danger);
+            z-index: 100;
+            pointer-events: none;
+            box-shadow: 0 0 10px var(--danger);
+            transition: left 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Audio Bars */
+        .audio-bar {
+            width: 3px;
+            background: #22c55e;
+            transition: height 0.1s ease;
+        }
+
+        .btn-action {
+            transition: all 0.2s;
+        }
+        .btn-action:hover {
+            transform: scale(1.1);
+            color: #fff;
+        }
+
+        /* Bouton TAP spécial */
+        .tap-button {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #fff;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 25px;
+            box-shadow: 0 0 0 rgba(59, 130, 246, 0);
+        }
+        .tap-button:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+        .tap-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="film-grain">
+
+    <!-- OVERLAY SHUTDOWN / REBOOT -->
+    <div id="shutdown-overlay" class="flex flex-col gap-6">
+        <div id="reboot-ui" class="hidden flex flex-col items-center gap-4">
+            <p class="mono text-[10px] text-zinc-500 tracking-[0.3em] uppercase">System_Shut_Down</p>
+            <button onclick="softReboot()" class="px-8 py-3 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white transition-all mono text-[11px] rounded uppercase tracking-widest">
+                Restart_Sequence
+            </button>
+        </div>
+    </div>
+
+    <!-- MESSAGE INTRO: DIRECTED BY GOD -->
+    <div id="god-message">
+        <div class="text-center">
+            <h2 class="mono text-[10px] tracking-[0.8em] text-zinc-500 mb-3 uppercase">Sanogo Production</h2>
+            <h1 class="text-3xl md:text-5xl font-extralight tracking-[0.4em] text-white uppercase italic">Directed by God</h1>
+        </div>
+    </div>
+
+    <!-- LOADER / CLAP -->
+    <div id="loader" class="fixed inset-0 bg-black flex flex-col items-center justify-center z-[5000] transition-opacity duration-700">
+        <div class="text-center">
+            <div class="cursor-pointer group mb-4" onclick="bootSystem()">
+                <div class="w-48 h-48 mx-auto">
+                    <svg viewBox="0 0 200 200" class="w-full h-full">
+                        <rect x="20" y="70" width="160" height="100" fill="#0a0a0a" stroke="white" stroke-width="2"/>
+                        <g id="clap-top" style="transform-origin: 20px 70px; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)">
+                            <rect x="20" y="30" width="160" height="40" fill="#0a0a0a" stroke="white" stroke-width="2"/>
+                            <path d="M20 30L50 70M80 30L110 70M140 30L170 70" stroke="white" stroke-width="12"/>
+                        </g>
+                        <text x="100" y="115" fill="white" font-family="monospace" font-size="10" text-anchor="middle">SANOGO_PROD</text>
+                        <text x="100" y="145" fill="#444" font-family="monospace" font-size="8" text-anchor="middle">TAKE: OFFICIAL_V5</text>
+                    </svg>
+                </div>
+            </div>
+            <button onclick="bootSystem()" class="tap-button">
+                Tap to Record
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN INTERFACE -->
+    <div id="app" class="app-grid hidden opacity-0 transition-opacity duration-1000">
+        
+        <!-- HEADER -->
+        <header class="h-10 bg-[#161616] border-b border-[#222] flex items-center justify-between px-4 z-[100]">
+            <div class="flex items-center gap-4">
+                <div class="flex gap-1.5">
+                    <div class="w-3 h-3 rounded-full bg-[#ff5f56] cursor-pointer hover:brightness-125 shadow-sm" onclick="shutDown()"></div>
+                    <div class="w-3 h-3 rounded-full bg-[#ffbd2e] cursor-pointer opacity-80" onclick="softReboot()"></div>
+                    <div class="w-3 h-3 rounded-full bg-[#27c93f] opacity-50"></div>
+                </div>
+                <div class="h-4 w-px bg-zinc-800 mx-2 hidden sm:block"></div>
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_8px_red]"></div>
+                    <span class="mono text-[10px] font-bold text-white tracking-widest uppercase hidden sm:inline">Master Output</span>
+                    <span id="main-tc" class="mono text-[11px] text-blue-500 font-bold tabular-nums">00:00:00:00</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="flex bg-black p-0.5 rounded border border-zinc-800 text-[9px] font-bold mono">
+                    <button onclick="switchLang('fr')" id="lang-fr" class="px-2 py-1 rounded bg-blue-600 text-white transition-all">FR</button>
+                    <button onclick="switchLang('en')" id="lang-en" class="px-2 py-1 rounded text-zinc-500 transition-all hover:text-white">EN</button>
+                </div>
+                <div class="flex gap-2 ml-2">
+                    <button onclick="softReboot()" class="btn-action text-zinc-500 hover:text-white" title="Reboot"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
+                    <button onclick="shutDown()" class="btn-action text-zinc-500 hover:text-red-500" title="Shutdown"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></button>
+                </div>
+            </div>
+        </header>
+
+        <!-- WORKSPACE -->
+        <div class="workspace">
+            
+            <aside class="panel border-r border-[#222] overflow-y-auto">
+                <div class="sticky top-0 bg-[#0f0f0f]/95 backdrop-blur-md p-3 border-b border-[#222] text-[9px] font-bold text-zinc-500 uppercase tracking-widest flex justify-between z-10">
+                    <span>Project Assets</span>
+                    <span class="text-blue-500">M_SANOGO_V5</span>
+                </div>
+                <div class="p-6 space-y-8">
+                    <div class="space-y-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-zinc-800 to-black border border-zinc-700 rounded-xl flex items-center justify-center shadow-inner relative group">
+                            <span class="text-xl font-black text-blue-500">MS</span>
+                            <div class="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"></div>
+                        </div>
+                        <div>
+                            <h1 class="font-black text-xl tracking-tighter" id="ui-name">MOHAMED SANOGO</h1>
+                            <p class="text-[10px] mono text-blue-400 mt-1 uppercase tracking-wider font-bold" id="ui-tagline">Architecte de Contenus Digitaux</p>
+                        </div>
+                        <p class="text-[11px] text-zinc-400 leading-relaxed italic border-l border-zinc-800 pl-3 py-1" id="ui-about">--</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-[9px] font-bold text-zinc-600 uppercase tracking-widest border-b border-zinc-900 pb-1">Formation.clip</h3>
+                        <div id="ui-edu" class="space-y-5"></div>
+                    </div>
+
+                    <div class="pt-6 border-t border-zinc-900 space-y-3">
+                        <h3 class="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">Metadata (Contact)</h3>
+                        <div class="text-[10px] mono space-y-2 text-zinc-500">
+                            <p class="flex justify-between"><span>TEL:</span> <span class="text-zinc-200">+225 0161492067</span></p>
+                            <p class="flex flex-col"><span>MAIL:</span> <span class="text-blue-400 truncate text-[9px] mt-0.5">sanogochristian74@gmail.com</span></p>
+                            <p class="flex justify-between"><span>LOC:</span> <span class="text-zinc-200">Abidjan, CI</span></p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="panel bg-[#050505] p-4 lg:p-10 flex flex-col items-center justify-center overflow-y-auto">
+                <div id="monitor-box" class="monitor-wrapper w-full max-w-4xl">
+                    <div class="monitor-container">
+                        <div id="monitor-content" class="relative z-10 p-6 text-center transform transition-all duration-500 opacity-0">
+                            <div class="mb-4 inline-flex items-center px-2 py-0.5 bg-blue-600/10 border border-blue-500/20 text-blue-500 text-[8px] font-bold uppercase rounded tracking-[0.2em]">
+                                <span class="w-1 h-1 bg-blue-500 rounded-full mr-2"></span> Source Preview
+                            </div>
+                            
+                            <h2 id="mon-title" class="text-3xl md:text-5xl lg:text-7xl font-black italic uppercase tracking-tighter leading-none mb-3">--</h2>
+                            
+                            <div class="flex flex-col md:flex-row items-center justify-center gap-1 md:gap-4 mb-5">
+                                <span id="mon-role" class="mono text-[10px] md:text-sm text-blue-500 font-bold uppercase tracking-[0.15em]">--</span>
+                                <span class="hidden md:inline text-zinc-800 text-xs">|</span>
+                                <span id="mon-period" class="mono text-[10px] md:text-xs text-zinc-500 font-bold tracking-widest">--</span>
+                            </div>
+
+                            <p id="mon-desc" class="text-[11px] md:text-sm text-zinc-400 mono max-w-xl mx-auto leading-relaxed border-t border-zinc-900 pt-5 opacity-80 font-light">--</p>
+                            
+                            <div class="mt-10 flex justify-center gap-8 items-center">
+                                <div class="w-12 h-12 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-500 hover:bg-blue-600 hover:text-white transition-all cursor-pointer shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                                    <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3L15.5 10L4.5 17V3Z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-4 left-4 text-[9px] mono text-zinc-600 flex gap-4 uppercase font-bold tracking-widest">
+                            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 bg-red-600 rounded-full"></span> 4K RAW</div>
+                            <span id="mon-tc">00:00:00:00</span>
+                        </div>
+
+                        <div class="absolute bottom-4 right-4">
+                            <div class="audio-meter flex items-end gap-0.5 h-10" id="audio-viz"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-10 flex flex-wrap justify-center gap-3">
+                    <div class="px-5 py-3 bg-[#111] border border-zinc-800/50 rounded-xl flex items-center gap-4 shadow-xl">
+                        <span class="text-[9px] font-bold text-zinc-700 uppercase tracking-widest">Audio_Tracks (Tags):</span>
+                        <div id="ui-tags" class="flex gap-3"></div>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="panel border-l border-[#222] overflow-y-auto">
+                <div class="sticky top-0 bg-[#0f0f0f]/95 backdrop-blur-md p-3 border-b border-[#222] text-[9px] font-bold text-zinc-500 uppercase tracking-widest z-10">
+                    Effect Controls (Compétences)
+                </div>
+                <div id="ui-skills" class="p-6 space-y-12"></div>
+            </aside>
+        </div>
+
+        <!-- TIMELINE FOOTER -->
+        <footer class="timeline-footer bg-[#0c0c0c] border-t border-[#222] flex flex-col">
+            <div class="h-8 border-b border-zinc-900 flex items-center px-4 justify-between bg-[#111]">
+                <div class="mono text-[9px] text-zinc-500 flex gap-6 font-bold uppercase tracking-wider">
+                    <span class="text-blue-500">Mohamed_Sanogo_Sequence</span>
+                    <span class="hidden md:block">Duration: 22_Years</span>
+                </div>
+                <div class="text-[9px] mono text-zinc-700 font-bold uppercase tracking-widest">Master Edit Mode</div>
+            </div>
+
+            <div class="relative flex-grow flex flex-col overflow-hidden h-36 lg:h-44">
+                <div id="playhead" class="playhead" style="left: 20px;"></div>
+                <div class="flex h-1/2 border-b border-zinc-900/40 items-center overflow-x-auto overflow-y-hidden px-4 gap-4 no-scrollbar" id="video-track"></div>
+                <div class="flex h-1/2 items-center overflow-x-auto overflow-y-hidden px-4 gap-4 no-scrollbar" id="audio-track"></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const content = {
+            fr: {
+                tagline: "Architecte de Contenus Digitaux",
+                about: "Étudiant en communication à l'ISCOM/UCAO-UUA, passionné par le digital, le design et l'IA. J'allie stratégie de contenu et expertise graphique pour maximiser l'impact visuel et l'engagement.",
+                scenes: [
+                    { 
+                        id: 1, title: "PIXLSTUDIO", role: "Community Manager (Stage)", date: "Juil - Oct 2025", 
+                        desc: "Gestion stratégique d'un portefeuille de 8 marques : élaboration de stratégies éditoriales, création de contenus multi-plateformes, modération et pilotage de campagnes digitales haute performance." 
+                    },
+                    { 
+                        id: 2, title: "SANCOFA AGENCY", role: "Webdesigner / Graphiste", date: "Oct 2024 - Juil 2025", 
+                        desc: "Identité de marque : création de logos et chartes graphiques. Conception UI/UX et mise en ligne de sites web vitrines optimisés pour la conversion et l'esthétique moderne." 
+                    },
+                    { 
+                        id: 3, title: "AMG RECORDS", role: "Community Manager (Freelance)", date: "Juil - Août 2025", 
+                        desc: "Direction artistique digitale pour le label : création de contenus visuels et textuels impactants pour les réseaux sociaux, maximisant la visibilité des artistes et de leurs projets." 
+                    },
+                    { 
+                        id: 4, title: "SHALOMMOOD MUSIC", role: "Assistant Responsable Com", date: "Mars - Sept 2022", 
+                        desc: "Planification stratégique des sorties musicales : élaboration de campagnes promotionnelles digitales, coordination des relations médias et suivi de la distribution sur les plateformes globales." 
+                    }
+                ],
+                skills: [
+                    { cat: "Creative Direction", items: [{n:"Design Graphique", v:95}, {n:"Montage Vidéo & Audio", v:90}, {n:"Webdesign (UI/UX)", v:88}] },
+                    { cat: "Digital Marketing", items: [{n:"Stratégie Digitale", v:92}, {n:"Meta Business / Analytics", v:85}, {n:"Rédaction Web & Script", v:90}] },
+                    { cat: "Technology", items: [{n:"IA Générative (Prompts)", v:98}, {n:"Web Dev (HTML/CSS/JS/PHP)", v:75}, {n:"Outils de Productivité", v:92}] }
+                ],
+                edu: [
+                    { y: "En cours", d: "Master en Communication", s: "UCAO-UUA" },
+                    { y: "2021 - 2024", d: "Licence Communication d'Org.", s: "UCAO-UUA" },
+                    { y: "2019 - 2021", d: "Baccalauréat A2", s: "Collège Adventiste d'Abidjan" }
+                ],
+                tags: ["FRANÇAIS (NATIF)", "ANGLAIS (FLUENT)", "CINÉMA", "IA"]
+            },
+            en: {
+                tagline: "Digital Content Architect",
+                about: "Communication student at ISCOM/UCAO-UUA, passionate about digital, design, and AI. I blend content strategy and graphic expertise to maximize visual impact and engagement.",
+                scenes: [
+                    { 
+                        id: 1, title: "PIXLSTUDIO", role: "Community Manager (Intern)", date: "July - Oct 2025", 
+                        desc: "Strategic management of 8 client brands: editorial strategy development, multi-platform content creation, moderation, and high-performance digital campaign management." 
+                    },
+                    { 
+                        id: 2, title: "SANCOFA AGENCY", role: "Webdesigner / Graphic Designer", date: "Oct 2024 - July 2025", 
+                        desc: "Brand identity: logo and graphic charter creation. UI/UX design and launching of professional websites optimized for modern aesthetics and conversion." 
+                    },
+                    { 
+                        id: 3, title: "AMG RECORDS", role: "Community Manager (Freelance)", date: "July - Aug 2025", 
+                        desc: "Digital art direction for the label: creating impactful visual and textual social media content, maximizing artist visibility and digital reach." 
+                    },
+                    { 
+                        id: 4, title: "SHALOMMOOD MUSIC", role: "Assistant Comm Manager", date: "March - Sept 2022", 
+                        desc: "Strategic planning of music releases: digital promotional campaign development, media relations coordination, and global distribution tracking." 
+                    }
+                ],
+                skills: [
+                    { cat: "Creative Direction", items: [{n:"Graphic Design", v:95}, {n:"Video & Audio Editing", v:90}, {n:"Webdesign (UI/UX)", v:88}] },
+                    { cat: "Digital Marketing", items: [{n:"Digital Strategy", v:92}, {n:"Meta Business / Analytics", v:85}, {n:"Web Writing & Scripts", v:90}] },
+                    { cat: "Technology", items: [{n:"Generative AI (Prompts)", v:98}, {n:"Web Dev (HTML/CSS/JS/PHP)", v:75}, {n:"Productivity Tools", v:92}] }
+                ],
+                edu: [
+                    { y: "Present", d: "Master's in Communication", s: "UCAO-UUA" },
+                    { y: "2021 - 2024", d: "Bachelor's in Org. Comm", s: "UCAO-UUA" },
+                    { y: "2019 - 2021", d: "High School Diploma (BAC A2)", s: "Adventist College of Abidjan" }
+                ],
+                tags: ["FRENCH (NATIVE)", "ENGLISH (FLUENT)", "CINEMA", "AI"]
+            }
+        };
+
+        let currentLang = 'fr';
+        let activeIdx = 0;
+        let isSystemInitialized = false;
+
+        function bootSystem() {
+            const clap = document.getElementById('clap-top');
+            const loader = document.getElementById('loader');
+            const godMsg = document.getElementById('god-message');
+            const app = document.getElementById('app');
+
+            // Stage 1: Action (Clap)
+            clap.style.transform = "rotate(-35deg)";
+            
+            setTimeout(() => {
+                clap.style.transform = "rotate(0deg)";
+                
+                // Stage 2: Loader Fade Out
+                setTimeout(() => {
+                    loader.classList.add('opacity-0');
+                    
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        
+                        // Stage 3: Directed by God Message
+                        godMsg.style.display = 'flex';
+                        setTimeout(() => {
+                            godMsg.style.opacity = '1';
+                            
+                            // Stage 4: App Reveal
+                            setTimeout(() => {
+                                godMsg.style.opacity = '0';
+                                
+                                setTimeout(() => {
+                                    godMsg.style.display = 'none';
+                                    app.classList.remove('hidden');
+                                    setTimeout(() => app.classList.remove('opacity-0'), 100);
+                                    if(!isSystemInitialized) {
+                                        init();
+                                        isSystemInitialized = true;
+                                    }
+                                }, 1000);
+                            }, 2800); 
+                        }, 100);
+                    }, 500);
+                }, 400);
+            }, 300);
+        }
+
+        function shutDown() {
+            const overlay = document.getElementById('shutdown-overlay');
+            const rebootUi = document.getElementById('reboot-ui');
+            overlay.classList.add('shutdown-anim');
+            setTimeout(() => {
+                rebootUi.classList.remove('hidden');
+            }, 800);
+        }
+
+        function softReboot() {
+            location.reload(); 
+        }
+
+        function init() {
+            render();
+            updateTC();
+            initAudio();
+        }
+
+        function updateTC() {
+            const mainTc = document.getElementById('main-tc');
+            const monTc = document.getElementById('mon-tc');
+            setInterval(() => {
+                const now = new Date();
+                const tc = `00:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}:${String(Math.floor(Math.random()*24)).padStart(2, '0')}`;
+                if(mainTc) mainTc.innerText = tc;
+                if(monTc) monTc.innerText = tc;
+            }, 41);
+        }
+
+        function initAudio() {
+            const viz = document.getElementById('audio-viz');
+            viz.innerHTML = '';
+            for(let i=0; i<15; i++) {
+                const b = document.createElement('div');
+                b.className = 'audio-bar';
+                viz.appendChild(b);
+            }
+            setInterval(() => {
+                document.querySelectorAll('.audio-bar').forEach(b => {
+                    b.style.height = (2 + Math.random() * 38) + 'px';
+                });
+            }, 100);
+        }
+
+        function switchLang(lang) {
+            currentLang = lang;
+            document.getElementById('lang-fr').className = lang === 'fr' ? 'px-2 py-1 rounded bg-blue-600 text-white transition-all' : 'px-2 py-1 rounded text-zinc-500 hover:text-white transition-all';
+            document.getElementById('lang-en').className = lang === 'en' ? 'px-2 py-1 rounded bg-blue-600 text-white transition-all' : 'px-2 py-1 rounded text-zinc-500 hover:text-white transition-all';
+            render();
+        }
+
+        function setScene(idx) {
+            const monBox = document.getElementById('monitor-box');
+            const contentDiv = document.getElementById('monitor-content');
+            const playhead = document.getElementById('playhead');
+            
+            monBox.classList.add('glitch-active');
+            contentDiv.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                activeIdx = idx;
+                const scene = content[currentLang].scenes[idx];
+                document.getElementById('mon-title').innerText = scene.title;
+                document.getElementById('mon-role').innerText = scene.role;
+                document.getElementById('mon-period').innerText = scene.date;
+                document.getElementById('mon-desc').innerText = `"${scene.desc}"`;
+                
+                const clips = document.querySelectorAll('.video-clip');
+                if (clips[idx]) {
+                    const rect = clips[idx].getBoundingClientRect();
+                    const parentRect = clips[idx].parentElement.getBoundingClientRect();
+                    playhead.style.left = (clips[idx].offsetLeft + 10) + 'px';
+                }
+
+                document.querySelectorAll('.video-clip').forEach((c, i) => {
+                    c.classList.toggle('active', i === idx);
+                });
+
+                contentDiv.classList.remove('opacity-0', 'scale-95');
+                setTimeout(() => monBox.classList.remove('glitch-active'), 300);
+            }, 300);
+        }
+
+        function render() {
+            const data = content[currentLang];
+            
+            document.getElementById('ui-tagline').innerText = data.tagline;
+            document.getElementById('ui-about').innerText = data.about;
+
+            // Education
+            document.getElementById('ui-edu').innerHTML = data.edu.map(e => `
+                <div class="space-y-0.5 group">
+                    <p class="text-[8px] text-blue-500 mono font-black uppercase tracking-wider">${e.y}</p>
+                    <p class="text-[11px] font-bold text-zinc-100 group-hover:text-blue-400 transition-colors uppercase">${e.d}</p>
+                    <p class="text-[10px] text-zinc-600 italic">${e.s}</p>
+                </div>
+            `).join('');
+
+            // Skills
+            document.getElementById('ui-skills').innerHTML = data.skills.map(c => `
+                <div class="space-y-4">
+                    <h4 class="text-[8px] font-bold text-zinc-600 uppercase tracking-widest border-b border-zinc-900 pb-2">${c.cat}</h4>
+                    <div class="space-y-5">
+                        ${c.items.map(s => `
+                            <div>
+                                <div class="flex justify-between text-[10px] mono mb-1.5 uppercase tracking-tight">
+                                    <span class="text-zinc-500">${s.n}</span>
+                                    <span class="text-blue-500 font-bold">${s.v}%</span>
+                                </div>
+                                <div class="h-[3px] bg-zinc-900 rounded-full overflow-hidden">
+                                    <div class="h-full bg-blue-600 transition-all duration-1500 ease-out" style="width: ${s.v}%"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            // Tags
+            document.getElementById('ui-tags').innerHTML = data.tags.map(t => `
+                <span class="px-3 py-1 bg-[#161616] text-zinc-500 text-[8px] mono rounded-lg border border-zinc-800 font-bold tracking-widest uppercase hover:text-white transition-colors cursor-default">${t}</span>
+            `).join('');
+
+            // Timeline Tracks
+            document.getElementById('video-track').innerHTML = data.scenes.map((s, i) => `
+                <div class="timeline-item video-clip ${i === activeIdx ? 'active' : ''} flex flex-col justify-center" onclick="setScene(${i})">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-[7px] mono text-zinc-600 font-bold">SCN_0${s.id}</span>
+                        <span class="text-[7px] mono text-blue-600 font-black">${currentLang === 'fr' ? 'EDIT' : 'CUT'}</span>
+                    </div>
+                    <p class="text-[10px] font-black truncate text-white uppercase tracking-tighter">${s.title}</p>
+                </div>
+            `).join('');
+
+            const audios = [
+                {n:"Soundtrack_1", w:120}, {n:"Ambience_Vocal", w:240}, {n:"Effect_Transitions", w:100}, {n:"Main_Score", w:180}
+            ];
+            document.getElementById('audio-track').innerHTML = audios.map(a => `
+                <div class="timeline-item opacity-40 cursor-default flex flex-col justify-center" style="min-width: ${a.w}px; background: #0c210c; border-left-color: #16a34a; border-left-width: 4px;">
+                    <span class="text-[7px] mono text-green-700 uppercase font-black">Audio_FX</span>
+                    <p class="text-[9px] font-bold text-zinc-400 uppercase tracking-tight">${a.n}</p>
+                </div>
+            `).join('');
+
+            setScene(activeIdx);
+        }
+    </script>
+</body>
+</html>
